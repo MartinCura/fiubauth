@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>FauxRPL</title>
+
+</head>
+<body>
+
+  <center>
+    <h1>Role Play Learn</h1>
+    <p>Para usar RPL, por favor inicie sesi&oacute;n...</p>
+    <p>Client id:
+      <input type="text" id="clientIdText" value="123456" size=6 style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">
+      <button id="save-client-id-button">Guardar</button>
+    </p>
+    <button id="login-button">Iniciar sesi&oacute;n mediante <b>FIUBAuth</b></button>
+  </center>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="https://www.sakimura.org/test/openidconnect.js"></script>
+
+  <script type="text/javascript">
+    function setupOIDC() {
+      var client_id = document.getElementById("clientIdText").value;
+      var clientInfo = {
+        client_id : client_id,
+        redirect_uri : 'http://localhost:3003'
+      };
+
+      OIDC.setClientInfo(clientInfo);
+
+      var providerInfo = OIDC.discover('http://localhost:8000/auth');
+
+      OIDC.setProviderInfo(providerInfo);
+      OIDC.storeInfo(providerInfo, clientInfo);
+
+      // Restore configuration information.
+      OIDC.restoreInfo();
+
+      // Get Access Token
+      var token = OIDC.getAccessToken();
+
+      // Make userinfo request using access_token.
+      if (token !== null) {
+        $.get('http://localhost:8000/auth/userinfo/?access_token='+token, function(data) {
+          alert("Su informaci\u00F3n es:\n\n" + JSON.stringify(data, null, 4  ));
+        });
+      }
+    }
+
+    $(function() {
+      setupOIDC();
+
+      $('#save-client-id-button').click(function (event) {
+        setupOIDC();
+      })
+
+      // Make an authorization request if the user click the login button.
+      $('#login-button').click(function (event) {
+        OIDC.login({
+          scope : 'openid profile email',
+          response_type : 'id_token token'
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

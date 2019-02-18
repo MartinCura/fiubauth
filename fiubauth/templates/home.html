@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+
+{% block content %}
+  <h1><b>FIUBAuth</b></h1>
+
+  {% if user.is_authenticated %}
+    Clientes a los cuales le ha dado acceso y los recursos compartidos:
+    <ul>
+      {% for consent in consents %}
+        <li>
+          <strong>{{ consent.client.name }}</strong>: <i class="text-muted">{{ consent.scope }}</i>
+        </li>
+      {% empty %}
+        <li>Ninguno todavía.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

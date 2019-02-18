@@ -1,0 +1,44 @@
+{% load i18n staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% trans 'FIUBAuth' %}</title>
+
+</head>
+<body>
+
+  <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+    <div class="container">
+      <img src="http://www.fi.uba.ar/sites/default/files/Logo%20FIUBA.jpg" height=100 alt="Logo FIUBA">
+      {# <a class="navbar-brand m-b-0" href="{% url 'home' %}">{% trans 'FIUBAuth' %}</a> #}
+      {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+          <a class="nav-link" href="{% url 'admin:index' %}"><i class="fa fa-external-link" aria-hidden="true"></i> {% trans 'Admin' %}</a>
+          (<a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-times" aria-hidden="true"></i>{% trans 'logout' %}</a>)
+        {% else %}
+          Hola, {{ user.username }}!
+          (<a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-times" aria-hidden="true"></i>{% trans 'logout' %}</a>)
+        {% endif %}
+      {% comment %}
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> {% trans 'Login' %}</a></li>
+      {% endcomment %}
+      {% endif %}
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 50px;">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
