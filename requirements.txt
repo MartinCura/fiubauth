@@ -1,4 +1,4 @@
-Django==2.2.18
+Django==2.2.21
 django-oidc-provider==0.7.0
 ipython==7.2.0
 psycopg2==2.7.7
